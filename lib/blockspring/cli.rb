@@ -1,4 +1,6 @@
 require "blockspring/cli/version"
+require "blockspring/cli/auth"
+require "blockspring/cli/command"
 
 module Blockspring
   module CLI
@@ -13,27 +15,27 @@ module Blockspring
     end
 
     def self.start(*args)
-    begin
-      if $stdin.isatty
-        $stdin.sync = true
+      begin
+        if $stdin.isatty
+          $stdin.sync = true
+        end
+        if $stdout.isatty
+          $stdout.sync = true
+        end
+        command = args.shift.strip rescue "help"
+        Blockspring::CLI::Command.load
+        Blockspring::CLI::Command.run(command, args)
+      rescue Interrupt => e
+        `stty icanon echo`
+        if ENV["BLOCKSPRING_DEBUG"]
+          puts e.inspect
+        else
+          error("Command cancelled.")
+        end
+      rescue => error
+        puts error.inspect
+        exit(1)
       end
-      if $stdout.isatty
-        $stdout.sync = true
-      end
-      command = args.shift.strip rescue "help"
-      Blockspring::CLI::Command.load
-      Blockspring::CLI::Command.run(command, args)
-    rescue Interrupt => e
-      `stty icanon echo`
-      if ENV["BLOCKSPRING_DEBUG"]
-        styled_error(e)
-      else
-        error("Command cancelled.")
-      end
-    rescue => error
-      styled_error(error)
-      exit(1)
     end
-  end
   end
 end
