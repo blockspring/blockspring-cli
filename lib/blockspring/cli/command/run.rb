@@ -10,6 +10,6 @@ class Blockspring::CLI::Command::Run < Blockspring::CLI::Command::Base
     end
 
     # now run
-    system('echo $BLOCKSPRING_API_KEY')
+    system(*@args)
   end
 end
