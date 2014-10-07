@@ -27,4 +27,9 @@ class Blockspring::CLI::Command::Base
       :command     => command
     )
   end
+
+  def self.alias_command(new, old)
+    raise "no such command: #{old}" unless Blockspring::CLI::Command.commands[old]
+    Blockspring::CLI::Command.command_aliases[new] = old
+  end
 end

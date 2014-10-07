@@ -6,6 +6,10 @@ module Blockspring
         @@commands ||= {}
       end
 
+      def self.command_aliases
+        @@command_aliases ||= {}
+      end
+
       def self.load
         Dir[File.join(File.dirname(__FILE__), "command", "*.rb")].each do |file|
           require file
@@ -28,7 +32,7 @@ module Blockspring
       end
 
       def self.parse(cmd)
-        commands[cmd] # || comands[commmand_aliases[cmd]]
+        commands[cmd] || commands[command_aliases[cmd]]
       end
     end
   end

@@ -62,7 +62,7 @@ class Blockspring::CLI::Auth
     end
 
     def api_key(login, password)
-      response = RestClient.post "#{base_url}/api_login", { login: login, password: password }, user_agent: Blockspring::CLI.user_agent
+      response = RestClient.post "#{base_url}/cli/login", { login: login, password: password }, user_agent: Blockspring::CLI.user_agent
       if response.code == 200
         response.to_str
       else

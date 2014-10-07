@@ -16,4 +16,7 @@ class Blockspring::CLI::Command::Auth < Blockspring::CLI::Command::Base
     Blockspring::CLI::Auth.delete_credentials
     puts "You have been logged out"
   end
+
+  alias_command 'login', 'auth:login'
+  alias_command 'logout', 'auth:logout'
 end
