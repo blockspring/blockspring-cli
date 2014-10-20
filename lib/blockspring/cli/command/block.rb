@@ -23,11 +23,20 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
   end
 
   def push
+    _user, key = Blockspring::CLI::Auth.get_credentials
     config_text = File.read('blockspring.json')
     config_json = JSON.parse(config_text)
     # TODO: check for language
     script_file = "block.#{config_json['language']}"
     puts "Reading #{script_file}"
+    script = File.read(script_file)
+    payload = {
+      code: script,
+      config: config_json
+    }
+    puts payload.inspect
+    response = RestClient.post "#{Blockspring::CLI::Auth.base_url}/cli/blocks/#{config_json['id']}", payload.to_json, :content_type => :json, :accept => :json, params: { api_key: key }, user_agent: Blockspring::CLI.user_agent
+    JSON.parse(response.to_str)
   end
 
   alias_command "get",  "block:get"
