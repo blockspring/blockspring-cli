@@ -27,21 +27,53 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
     config_text = File.read('blockspring.json')
     config_json = JSON.parse(config_text)
     # TODO: check for language
-    script_file = "block.#{config_json['language']}"
-    puts "Reading #{script_file}"
+    # language could eventually be js:0.10.x or py:3 or ruby:MRI-2.0
+    script_file = "block.#{config_json['language'].split(':')[0]}"
     script = File.read(script_file)
+
     payload = {
       code: script,
       config: config_json
     }
-    puts payload.inspect
-    response = RestClient.post "#{Blockspring::CLI::Auth.base_url}/cli/blocks/#{config_json['id']}", payload.to_json, :content_type => :json, :accept => :json, params: { api_key: key }, user_agent: Blockspring::CLI.user_agent
-    JSON.parse(response.to_str)
+
+    if config_json['id']
+      uri = "#{Blockspring::CLI::Auth.base_url}/cli/blocks/#{config_json['id']}"
+    else
+      uri = "#{Blockspring::CLI::Auth.base_url}/cli/blocks"
+    end
+    response = RestClient.post uri, payload.to_json, :content_type => :json, :accept => :json, params: { api_key: key }, user_agent: Blockspring::CLI.user_agent
+    json_response = JSON.parse(response.to_str)
+    save_block_files(json_response, '.')
+  end
+
+  def new
+    user, key = Blockspring::CLI::Auth.get_credentials
+    language = @args[0]
+    name = @args[1]
+
+    block = {}
+
+    block['code'] = ""
+
+    block['config'] = {
+      "user" => user,
+      "title" => name,
+      "description" => '',
+      "parameters" => {},
+      "is_public" => false,
+      "language" => language
+    }
+
+    dir_name = create_block_directory(block)
+
+    save_block_files(block, dir_name)
+
   end
 
   alias_command "get",  "block:get"
   alias_command "pull", "block:pull"
   alias_command "push", "block:push"
+  alias_command "new", "block:new"
 
 protected
 
@@ -67,19 +99,23 @@ protected
   end
 
   def get_block_directory(block)
-    slug = block['config']['title'].downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')[0,12]
-    "#{slug}-#{block['id'][0,8]}"
+    slug = block['config']['title'].downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
+    if block['config']['id']
+      "#{slug[0,12]}-#{block['id'][0,8]}"
+    else
+      "#{slug[0,20]}"
+    end
   end
 
   def save_block_files(block, dir_name)
     # create script file
-    script_file = File.join(dir_name, "block.#{block['config']['language']}")
-    puts "Saving script file #{script_file}"
+    script_file = File.join(dir_name, "block.#{block['config']['language'].split(':')[0]}")
+    puts "Syncing script file #{script_file}"
     File.open(script_file, 'w') { |file| file.write(block['code']) }
 
     # create config file
     config_file = File.join(dir_name, "blockspring.json")
-    puts "Saving config file #{config_file}"
+    puts "Syncing config file #{config_file}"
     File.open(config_file, 'w') { |file| file.write(JSON.pretty_generate(block['config']) + "\n") }
   end
 end
