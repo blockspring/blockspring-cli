@@ -6,9 +6,11 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
 
     dir_name = create_block_directory(block)
 
-    save_block_files(block, dir_name)
+    if dir_name
+      save_block_files(block, dir_name)
+      puts "Done."
+    end
 
-    puts "Done."
   end
 
   def pull
@@ -65,9 +67,9 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
     }
 
     dir_name = create_block_directory(block)
-
-    save_block_files(block, dir_name)
-
+    if dir_name
+      save_block_files(block, dir_name)
+    end
   end
 
   alias_command "get",  "block:get"
@@ -89,7 +91,8 @@ protected
     dir_name = get_block_directory(block)
 
     if File.exist?(dir_name) || File.symlink?(dir_name)
-      return puts 'Block directory already exists.'
+      puts 'Block directory already exists.'
+      return false
     end
 
     # create block directory

@@ -6,11 +6,11 @@ require 'blockspring/cli/version'
 Gem::Specification.new do |spec|
   spec.name          = "blockspring-cli"
   spec.version       = Blockspring::CLI::VERSION
-  spec.authors       = ["Jason Tokoph"]
-  spec.email         = ["jason@tokoph.net"]
+  spec.authors       = ["Blockspring"]
+  spec.email         = ["founders@blockspring.com"]
   spec.summary       = "This is the command line helper for blockspring"
   spec.description   = "This is the command line helper for blockspring"
-  spec.homepage      = ""
+  spec.homepage      = "http://www.blockspring.com"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
