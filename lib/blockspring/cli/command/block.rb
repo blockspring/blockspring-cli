@@ -2,7 +2,8 @@ require "blockspring/cli/command/base"
 
 class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
   def get
-    block = get_block(@args[0])
+    block_parts = @args[0].split("/")
+    block = get_block(block_parts[block_parts.length - 1])
 
     dir_name = create_block_directory(block)
 
