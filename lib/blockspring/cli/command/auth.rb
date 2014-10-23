@@ -9,7 +9,10 @@ class Blockspring::CLI::Command::Auth < Blockspring::CLI::Command::Base
   end
 
   def login
-    Blockspring::CLI::Auth.reauthorize
+    user, _key = Blockspring::CLI::Auth.reauthorize
+    if user
+      puts "You are logged in as #{user}"
+    end
   end
 
   def logout
