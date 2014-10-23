@@ -1,3 +1,7 @@
+require 'netrc'
+require 'rest_client'
+require 'json'
+
 require "blockspring/cli/version"
 require "blockspring/cli/auth"
 require "blockspring/cli/command"

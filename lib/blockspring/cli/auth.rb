@@ -1,6 +1,3 @@
-require 'netrc'
-require 'rest_client'
-
 class Blockspring::CLI::Auth
   class << self
     def host
