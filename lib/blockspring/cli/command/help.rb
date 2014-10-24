@@ -1,10 +1,45 @@
 require "blockspring/cli/command/base"
 
-# huh?
+# Get information about commands
 #
 class Blockspring::CLI::Command::Help < Blockspring::CLI::Command::Base
 
   PRIMARY_NAMESPACES = %w( auth block run )
+
+  # help [COMMAND]
+  #
+  # "Yo dawg. I heard you liked help..." -Xzibit
+  #
+  #Examples:
+  #
+  # $ blockspring help
+  # Usage: blockspring COMMAND [command-specific-options]
+  #
+  # Primary help topics, type "blockspring help TOPIC" for more details:
+  #
+  #   auth   #  authentication (login, logout)
+  #   block  #  manipulate blocks (get, push, pull, new)
+  #   run    #  set BLOCKSPRING_API_KEY environment variable and run command
+  #
+  # Additional topics:
+  #
+  #   help     #  huh?
+  #   version  #  display version
+  #
+  # $ blockspring help block:new
+  # Usage: blockspring block:new LANGUAGE "Block Name"
+  #
+  #  generate a new block
+  #
+  #  LANGUAGE: js|php|py|R|rb
+  #
+  # Example:
+  #
+  #  $ blockspring new js "My Cool Block"
+  #  Creating directory my-cool-block
+  #  Syncing script file my-cool-block/block.js
+  #  Syncing config file my-cool-block/blockspring.json
+
 
   def index
     if command = args.shift

@@ -43,6 +43,7 @@ class Blockspring::CLI::Command::Base
       :namespace   => self.namespace,
       :banner      => banner.strip,
       :summary     => extract_summary(help),
+      :description => extract_description(help),
       :help        => help.join("\n")
     )
   end

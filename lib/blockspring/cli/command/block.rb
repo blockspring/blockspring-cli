@@ -3,6 +3,18 @@ require "blockspring/cli/command/base"
 # manipulate blocks (get, push, pull, new)
 #
 class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
+  # block:get BLOCKID
+  #
+  # pull down an existing block from blockspring
+  #
+  #Example:
+  #
+  # $ blockspring get testuser/f19512619b94678ea0b4bf383f3a9cf5
+  # Creating directory cool-block-f1951261
+  # Syncing script file cool-block-f1951261/block.py
+  # Syncing config file cool-block-f1951261/blockspring.json
+  # Done.
+  #
   def get
     block_parts = @args[0].split("/")
     block = get_block(block_parts[block_parts.length - 1])
@@ -16,6 +28,17 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
 
   end
 
+  # block:pull
+  #
+  # pull block changes from the server to current directory
+  #
+  #Example:
+  #
+  # $ blockspring pull
+  # Syncing script file block.py
+  # Syncing config file blockspring.json
+  # Done.
+  #
   def pull
     # load config file
     config_text = File.read('blockspring.json')
@@ -27,6 +50,17 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
     puts "Done."
   end
 
+  # block:push
+  #
+  # push local block changes or new block to the server
+  #
+  #Example:
+  #
+  # $ blockspring push
+  # Syncing script file block.py
+  # Syncing config file blockspring.json
+  # Done.
+  #
   def push
     _user, key = Blockspring::CLI::Auth.get_credentials
     config_text = File.read('blockspring.json')
@@ -51,6 +85,19 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
     save_block_files(json_response, '.')
   end
 
+  # block:new LANGUAGE "Block Name"
+  #
+  # generate a new block
+  #
+  # LANGUAGE: js|php|py|R|rb
+  #
+  #Example:
+  #
+  # $ blockspring new js "My Cool Block"
+  # Creating directory my-cool-block
+  # Syncing script file my-cool-block/block.js
+  # Syncing config file my-cool-block/blockspring.json
+  #
   def new
     user, key = Blockspring::CLI::Auth.get_credentials
     language = @args[0]
