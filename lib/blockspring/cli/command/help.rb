@@ -95,7 +95,7 @@ class Blockspring::CLI::Command::Help < Blockspring::CLI::Command::Base
       help_for_namespace(name)
       puts
     elsif command.nil?
-      error "#{name} is not a blockspring command. See `heroku help`."
+      error "#{name} is not a blockspring command. See `blockspring help`."
     end
   end
 
