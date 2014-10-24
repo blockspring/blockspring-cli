@@ -1,5 +1,7 @@
 require "blockspring/cli/command/base"
 
+# set BLOCKSPRING_API_KEY environment variable and run command
+#
 class Blockspring::CLI::Command::Run < Blockspring::CLI::Command::Base
   def index
     if ENV['BLOCKSPRING_API_KEY'].to_s.strip.empty?

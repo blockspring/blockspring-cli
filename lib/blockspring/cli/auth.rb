@@ -1,5 +1,9 @@
+require "blockspring/cli/helpers"
+
 class Blockspring::CLI::Auth
   class << self
+    include Blockspring::CLI::Helpers
+
     def host
       ENV['BLOCKSPRING_API_HOST'] || 'localhost:3000'
     end
@@ -46,6 +50,24 @@ class Blockspring::CLI::Auth
       return password
     end
 
+    def ask_for_password_on_windows
+      require "Win32API"
+      char = nil
+      password = ''
+
+      while char = Win32API.new("crtdll", "_getch", [ ], "L").Call do
+        break if char == 10 || char == 13 # received carriage return or newline
+        if char == 127 || char == 8 # backspace and delete
+          password.slice!(-1, 1)
+        else
+          # windows might throw a -1 at us so make sure to handle RangeError
+          (password << char.chr) rescue RangeError
+        end
+      end
+      puts
+      return password
+    end
+
     def ask_for_credentials
       puts "Enter your Blockspring credentials."
 
@@ -53,7 +75,7 @@ class Blockspring::CLI::Auth
       login = ask
 
       print "Password (typing will be hidden): "
-      password = ask_for_password
+      password = running_on_windows? ? ask_for_password_on_windows : ask_for_password
 
       [login, api_key(login, password)]
     end
@@ -92,6 +114,9 @@ class Blockspring::CLI::Auth
     def write_credentials
       FileUtils.mkdir_p(File.dirname(netrc_path))
       FileUtils.touch(netrc_path)
+      unless running_on_windows?
+        FileUtils.chmod(0600, netrc_path)
+      end
       netrc[host] = @credentials
       netrc.save
     end

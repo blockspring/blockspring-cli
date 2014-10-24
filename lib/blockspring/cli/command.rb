@@ -10,6 +10,10 @@ module Blockspring
         @@command_aliases ||= {}
       end
 
+      def self.files
+        @@files ||= Hash.new {|hash,key| hash[key] = File.readlines(key).map {|line| line.strip}}
+      end
+
       def self.load
         Dir[File.join(File.dirname(__FILE__), "command", "*.rb")].each do |file|
           require file
@@ -33,6 +37,14 @@ module Blockspring
 
       def self.parse(cmd)
         commands[cmd] || commands[command_aliases[cmd]]
+      end
+
+      def self.namespaces
+        @@namespaces ||= {}
+      end
+
+      def self.register_namespace(namespace)
+        namespaces[namespace[:name]] = namespace
       end
     end
   end

@@ -1,5 +1,7 @@
 require "blockspring/cli/command/base"
 
+# manipulate blocks (get, push, pull, new)
+#
 class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
   def get
     block_parts = @args[0].split("/")

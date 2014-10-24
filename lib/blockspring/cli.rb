@@ -5,6 +5,7 @@ require 'json'
 require "blockspring/cli/version"
 require "blockspring/cli/auth"
 require "blockspring/cli/command"
+require "blockspring/cli/helpers"
 
 module Blockspring
   module CLI
@@ -36,9 +37,9 @@ module Blockspring
         else
           error("Command cancelled.")
         end
-      rescue => error
-        puts error.inspect
-        exit(1)
+      # rescue => error
+      #   puts error.inspect
+      #   exit(1)
       end
     end
   end
