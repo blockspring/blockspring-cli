@@ -1,29 +1,37 @@
-# Blockspring::Cli
+# Blockspring CLI
 
-TODO: Write a gem description
+The Blockspring CLI is used to manage and run blocks from the command line.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'blockspring-cli'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+Install via command line:
 
     $ gem install blockspring-cli
 
 ## Usage
 
-TODO: Write usage instructions here
+### Login with your api.blockspring.com account.
+```bash
+blockspring login
+```
 
-## Contributing
+### Create a new block
+```bash
+blockspring new js "My new JS block"
+cd my-new-js-block
+```
 
-1. Fork it ( https://github.com/[my-github-username]/blockspring-cli/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+### Edit your function
+```bash
+echo "console.log('hi');" > block.js
+```
+
+### Push
+```bash
+blockspring push
+```
+
+## License
+
+Released under the MIT license; see the file License.
+
