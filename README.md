@@ -33,5 +33,5 @@ blockspring push
 
 ## License
 
-Released under the MIT license; see the file License.
+MIT - see the license file.
 
