@@ -46,7 +46,7 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
     # TODO: ensure valid config
     puts "Pulling #{config_json['user']}/#{config_json['id']}"
     block = get_block(config_json['id'])
-    save_block_files(block, '.')
+    save_block_files(block, '.', 'Pulling')
     puts "Done."
   end
 
@@ -75,14 +75,23 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
       config: config_json
     }
 
+    if @args.include? '--force'
+      payload['force'] = true
+    end
+
     if config_json['id']
       uri = "#{Blockspring::CLI::Auth.base_url}/cli/blocks/#{config_json['id']}"
     else
       uri = "#{Blockspring::CLI::Auth.base_url}/cli/blocks"
     end
-    response = RestClient.post uri, payload.to_json, :content_type => :json, :accept => :json, params: { api_key: key }, user_agent: Blockspring::CLI.user_agent
-    json_response = JSON.parse(response.to_str)
-    save_block_files(json_response, '.')
+
+    begin
+      response = RestClient.post uri, payload.to_json, :content_type => :json, :accept => :json, params: { api_key: key }, user_agent: Blockspring::CLI.user_agent
+      json_response = JSON.parse(response.body)
+      save_block_config(json_response, '.', 'Syncronizing')
+    rescue RestClient::Exception => msg
+      error(msg.inspect)
+    end
   end
 
   # block:new LANGUAGE "Block Name"
@@ -118,7 +127,7 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
 
     dir_name = create_block_directory(block)
     if dir_name
-      save_block_files(block, dir_name)
+      save_block_files(block, dir_name, 'Creating')
     end
   end
 
@@ -160,15 +169,22 @@ protected
     end
   end
 
-  def save_block_files(block, dir_name)
-    # create script file
+  def save_block_script(block, dir_name, action='Syncing')
     script_file = File.join(dir_name, "block.#{block['config']['language'].split(':')[0]}")
-    puts "Syncing script file #{script_file}"
+    puts "#{action} script file #{script_file}"
     File.open(script_file, 'w') { |file| file.write(block['code']) }
+  end
 
-    # create config file
+  def save_block_config(block, dir_name, action='Syncing')
     config_file = File.join(dir_name, "blockspring.json")
-    puts "Syncing config file #{config_file}"
+    puts "#{action} config file #{config_file}"
     File.open(config_file, 'w') { |file| file.write(JSON.pretty_generate(block['config']) + "\n") }
+  end
+
+  def save_block_files(block, dir_name, action='Syncing')
+    # create script file
+    save_block_script(block, dir_name, action)
+    # create config file
+    save_block_config(block, dir_name, action)
   end
 end
