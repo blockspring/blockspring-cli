@@ -63,11 +63,25 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
   #
   def push
     _user, key = Blockspring::CLI::Auth.get_credentials
+
+    unless File.exists?('blockspring.json')
+      return error('blockspring.json file not found')
+    end
+
     config_text = File.read('blockspring.json')
     config_json = JSON.parse(config_text)
-    # TODO: check for language
+
+    if config_json['language'].nil?
+      return error('You must declare a language in your blockspring.json file.')
+    end
+
     # language could eventually be js:0.10.x or py:3 or ruby:MRI-2.0
     script_file = "block.#{config_json['language'].split(':')[0]}"
+
+    unless File.exists?(script_file)
+      return error("#{script_file} file not found")
+    end
+
     script = File.read(script_file)
 
     payload = {
