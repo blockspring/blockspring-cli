@@ -10,23 +10,23 @@ Install via command line:
 
 ## Usage
 
-### Login with your api.blockspring.com account.
+#### Login with your api.blockspring.com account.
 ```bash
 blockspring login
 ```
 
-### Create a new block
+#### Create a new block
 ```bash
 blockspring new js "My new JS block"
 cd my-new-js-block
 ```
 
-### Edit your function
+#### Edit your function
 ```bash
 echo "console.log('hi');" > block.js
 ```
 
-### Push
+#### Push
 ```bash
 blockspring push
 ```
