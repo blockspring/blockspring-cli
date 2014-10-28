@@ -88,7 +88,7 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
     begin
       response = RestClient.post uri, payload.to_json, :content_type => :json, :accept => :json, params: { api_key: key }, user_agent: Blockspring::CLI.user_agent
       json_response = JSON.parse(response.body)
-      save_block_config(json_response, '.', 'Syncronizing')
+      save_block_files(json_response, '.', 'Syncronizing')
     rescue RestClient::Exception => msg
       error(msg.inspect)
     end
@@ -112,22 +112,20 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
     language = @args[0]
     name = @args[1]
 
-    block = {}
+    begin
 
-    block['code'] = ""
+      block = get_template(language)
 
-    block['config'] = {
-      "user" => user,
-      "title" => name,
-      "description" => '',
-      "parameters" => {},
-      "is_public" => false,
-      "language" => language
-    }
+      block['config']['title'] = name
 
-    dir_name = create_block_directory(block)
-    if dir_name
-      save_block_files(block, dir_name, 'Creating')
+      dir_name = create_block_directory(block)
+      if dir_name
+        save_block_files(block, dir_name, 'Creating')
+      end
+    rescue RestClient::ResourceNotFound => msg
+      error("The language '#{language}' is not supported by Blockspring.")
+    rescue RestClient::Exception => msg
+      error(msg.inspect)
     end
   end
 
@@ -142,6 +140,12 @@ protected
   def get_block(block_id)
     _user, key = Blockspring::CLI::Auth.get_credentials
     response = RestClient.get "#{Blockspring::CLI::Auth.base_url}/cli/blocks/#{block_id}", params: { api_key: key }, user_agent: Blockspring::CLI.user_agent
+    JSON.parse(response.to_str)
+  end
+
+  def get_template(format)
+    _user, key = Blockspring::CLI::Auth.get_credentials
+    response = RestClient.get "#{Blockspring::CLI::Auth.base_url}/cli/templates/#{format}", params: { api_key: key }, user_agent: Blockspring::CLI.user_agent
     JSON.parse(response.to_str)
   end
 
