@@ -131,7 +131,7 @@ class Blockspring::CLI::Auth
       end
     end
 
-    def netrc   # :nodoc:
+    def netrc
       @netrc ||= begin
         File.exists?(netrc_path) && Netrc.read(netrc_path)
       rescue => error

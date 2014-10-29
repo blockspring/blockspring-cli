@@ -54,6 +54,17 @@ class Blockspring::CLI::Command::Run < Blockspring::CLI::Command::Base
   # $ blockspring run:remote jtokoph/aasdfj332flk3 --zip-code=94110
   #
   def remote
-    error('not yet implimented')
+    require 'blockspring'
+
+    _, key = Blockspring::CLI::Auth.get_credentials
+
+    block_id = @args[0]
+
+    myBlock = lambda do |request, response|
+      response = Blockspring.run(block_id, request.params, key)
+      puts response
+    end
+
+    Blockspring.define(myBlock)
   end
 end
