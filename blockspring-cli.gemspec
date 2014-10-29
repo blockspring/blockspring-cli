@@ -23,5 +23,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "netrc",        "~> 0.8.0"
   spec.add_dependency "rest-client",  "= 1.7.2"
-  spec.add_dependency "json", "~> 1.8.1"
+  spec.add_dependency "json",         "~> 1.8.1"
+  spec.add_dependency "launchy",      "~> 2.4.2"
 end

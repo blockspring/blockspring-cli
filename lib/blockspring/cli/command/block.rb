@@ -1,4 +1,5 @@
 require "blockspring/cli/command/base"
+require "launchy"
 
 # manipulate blocks (get, push, pull, new)
 #
@@ -143,6 +144,21 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
     end
   end
 
+  def open
+    config_text = File.read('blockspring.json')
+    config_json = JSON.parse(config_text)
+
+    user = config_json['user']
+    block_id = config_json['id']
+
+    uri = "#{Blockspring::CLI::Auth.base_url}/#{user}/#{block_id}"
+
+    Launchy.open( uri ) do |exception|
+      puts "Attempted to open #{uri} and failed because #{exception}"
+    end
+  end
+
+  alias_command "open", "block:open"
   alias_command "get",  "block:get"
   alias_command "pull", "block:pull"
   alias_command "push", "block:push"
