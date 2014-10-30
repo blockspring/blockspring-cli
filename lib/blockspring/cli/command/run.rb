@@ -62,7 +62,9 @@ class Blockspring::CLI::Command::Run < Blockspring::CLI::Command::Base
 
     myBlock = lambda do |request, response|
       response = Blockspring.run(block_id, request.params, key)
-      puts response
+
+      # TODO: don't autoparse the json in the library, I want the raw json
+      puts response.to_json
     end
 
     Blockspring.define(myBlock)
