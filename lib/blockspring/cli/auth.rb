@@ -5,12 +5,12 @@ class Blockspring::CLI::Auth
     include Blockspring::CLI::Helpers
 
     def host
-      ENV['BLOCKSPRING_API_HOST'] || 'localhost:3000'
+      ENV['BLOCKSPRING_API_HOST'] || 'api.blockspring.com'
     end
 
     # TODO: change to https
     def base_url
-      protocol = ENV['BLOCKSPRING_API_PROTOCOL'] || 'http'
+      protocol = ENV['BLOCKSPRING_API_PROTOCOL'] || 'https'
       "#{protocol}://#{host}"
     end
 
