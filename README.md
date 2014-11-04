@@ -46,6 +46,7 @@ Now that our block is now deployed we can visit its homepage to see it in action
     
 That's it! We've deployed our first block. To learn more about the Blockspring-CLI, check out the [API in Detail](#api-in-detail) section below. Otherwise, let's pick out our favorite language and start writing our own blocks.
 
+######Language-Specific Libraries
 <table>
   <tr>
     <th>If you prefer this language...</th>
@@ -154,14 +155,16 @@ Let's execute a block remotely by passing parameters into stdin or via command-l
 Remember, a block id can be found directly in a block's URL. The block id for https://api.blockspring.com/pkpp1233/ce6c7c230d8a4ff4d22ae96654ca4bd2 is pkpp1233/ce6c7c230d8a4ff4d22ae96654ca4bd2. Try running the sum with this block id.
 
     $ echo '{"num1": 30, "num2": 50}' | blockspring run pkpp1233/ce6c7c230d8a4ff4d22ae96654ca4bd2
+    
+######RUN:LOCAL
 
-We can also run blocks locally on our computer. Let's do a ```GET``` request to a local directory and then use ```RUN``` to execute that block locally without sending any data to Blockspring.
+We can also run blocks locally on our computer. Let's do a ```GET``` request to a local directory and then use ```RUN:LOCAL``` to execute that block locally without sending any data to Blockspring.
 
     $ blockspring get pkpp1233/ce6c7c230d8a4ff4d22ae96654ca4bd2
     $ cd summer-ce6c7c23
-    $ echo '{"num1": 30, "num2": 50}' | blockspring run python block.py
+    $ echo '{"num1": 30, "num2": 50}' | blockspring run:local python block.py
     
-Note: To```RUN``` blocks locally, we need to have the proper runtimes and dependencies installed. For the above example, we need python installed on our local machine.
+Note: To```RUN``` blocks locally, we need to have the proper runtimes and dependencies installed. This is a Blockspring WIP. To run the above example locally, we need to make sure we have the python runtime and the blockspring python library installed (see [Language-Specific Libraries](#language-specific-libraries)).
 
 ####Help
 
