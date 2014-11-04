@@ -65,12 +65,25 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
   def push
     _user, key = Blockspring::CLI::Auth.get_credentials
 
-    unless File.exists?('blockspring.json')
-      return error('blockspring.json file not found')
-    end
+    if not(File.exists?('blockspring.json'))
+      config_json = {
+        language: nil
+      }
 
-    config_text = File.read('blockspring.json')
-    config_json = JSON.parse(config_text)
+      # hardcode languages
+      language_options = [ "rb", "py", "js", "php", "R"]
+
+      # hardcode block.* name. find first one and set that to language.
+      language_options.each do |language|
+        if File.exists?("block." + language)
+          config_json[:language] = language
+          break
+        end
+      end
+    else
+      config_text = File.read('blockspring.json')
+      config_json = JSON.parse(config_text)
+    end
 
     if config_json['language'].nil?
       return error('You must declare a language in your blockspring.json file.')
