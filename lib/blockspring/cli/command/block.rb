@@ -67,7 +67,7 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
 
     if not(File.exists?('blockspring.json'))
       config_json = {
-        language: nil
+        'language' => nil
       }
 
       # hardcode languages
@@ -76,7 +76,7 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
       # hardcode block.* name. find first one and set that to language.
       languages.each do |language|
         if File.exists?("block." + language)
-          config_json[:language] = language
+          config_json['language'] = language
           break
         end
       end
