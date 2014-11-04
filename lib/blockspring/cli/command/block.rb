@@ -70,15 +70,11 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
         'language' => nil
       }
 
-      # hardcode languages
-      languages = [ "rb", "py", "js", "php", "R"]
-
       # hardcode block.* name. find first one and set that to language.
-      languages.each do |language|
-        if File.exists?("block." + language)
-          config_json['language'] = language
+      Dir["block.*"].each do |block_file|
+          language_match = block_file.match(/\Ablock\.(.*)/)
+          config_json['language'] = language_match ? language_match.captures[0] : nil
           break
-        end
       end
     else
       config_text = File.read('blockspring.json')
