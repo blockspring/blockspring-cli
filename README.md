@@ -106,19 +106,19 @@ To create a ```NEW``` block:
 Here are explicit commands to create a new block in each supported language:
     
     // Ruby: creates dir w/ block.rb & blockspring.json
-    blockspring new rb "fun ruby block"
+    $ blockspring new rb "fun ruby block"
     
     // Python: creates dir w/ block.py & blockspring.json
-    blockspring new py "fun python block"
+    $ blockspring new py "fun python block"
     
     // Javascript: creates dir w/ block.js & blockspring.json
-    blockspring new js "fun javascript block"
+    $ blockspring new js "fun javascript block"
     
     // PHP: creates dir w/ block.php & blockspring.json
-    blockspring new php "fun php block"
+    $ blockspring new php "fun php block"
     
     // R: creates dir w/ block.R & blockspring.json
-    blockspring new R "fun R block"
+    $ blockspring new R "fun R block"
     
 The ```NEW``` command creates a working directory for your block and populates that directory with two files: a ```block.*``` (asterisk is for your language of choice - file holds your function) and a ```blockspring.json``` (this file holds the block's configs and additional data).
 
