@@ -71,10 +71,10 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
       }
 
       # hardcode languages
-      language_options = [ "rb", "py", "js", "php", "R"]
+      languages = [ "rb", "py", "js", "php", "R"]
 
       # hardcode block.* name. find first one and set that to language.
-      language_options.each do |language|
+      languages.each do |language|
         if File.exists?("block." + language)
           config_json[:language] = language
           break
