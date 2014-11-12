@@ -186,8 +186,16 @@ protected
   # TODO: move this to another file like 'api'
   def get_block(block_id)
     _user, key = Blockspring::CLI::Auth.get_credentials
-    response = RestClient.get "#{Blockspring::CLI::Auth.base_url}/cli/blocks/#{block_id}", params: { api_key: key }, user_agent: Blockspring::CLI.user_agent
-    JSON.parse(response.to_str)
+    response = RestClient.get("#{Blockspring::CLI::Auth.base_url}/cli/blocks/#{block_id}", params: { api_key: key }, user_agent: Blockspring::CLI.user_agent) do |response, request, result, &block|
+      case response.code
+      when 200
+        JSON.parse(response.to_str)
+      when 404
+        error('That block does not exist or you don\'t have permission to access it')
+      else
+        error('Could not get block data from server')
+      end
+    end
   end
 
   def get_template(format)
