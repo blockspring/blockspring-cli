@@ -81,11 +81,15 @@ class Blockspring::CLI::Auth
     end
 
     def api_key(login, password)
-      response = RestClient.post "#{base_url}/cli/login", { login: login, password: password }, user_agent: Blockspring::CLI.user_agent
-      if response.code == 200
-        response.to_str
-      else
-        raise 'login failed'
+      response = RestClient.post "#{base_url}/cli/login", { login: login, password: password }, user_agent: Blockspring::CLI.user_agent do |response, request, result, &block|
+        case response.code
+        when 200
+          response.to_str
+        when 401
+          error('Invalid username or password.')
+        else
+          error('login failed')
+        end
       end
     end
 
