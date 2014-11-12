@@ -109,12 +109,17 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
       uri = "#{Blockspring::CLI::Auth.base_url}/cli/blocks"
     end
 
-    begin
-      response = RestClient.post uri, payload.to_json, :content_type => :json, :accept => :json, params: { api_key: key }, user_agent: Blockspring::CLI.user_agent
-      json_response = JSON.parse(response.body)
-      save_block_files(json_response, '.', 'Syncronizing')
-    rescue RestClient::Exception => msg
-      error(msg.inspect)
+
+    response = RestClient.post(uri, payload.to_json, :content_type => :json, :accept => :json, params: { api_key: key }, user_agent: Blockspring::CLI.user_agent) do |response, request, result, &block|
+      case response.code
+      when 200
+        json_response = JSON.parse(response.body)
+        save_block_files(json_response, '.', 'Syncronizing')
+      when 401
+        error('You must be logged in to push a block')
+      when 404
+        error('That block does not exist or you don\'t have permission to push to it')
+      end
     end
   end
 
@@ -135,6 +140,9 @@ class Blockspring::CLI::Command::Block < Blockspring::CLI::Command::Base
     user, key = Blockspring::CLI::Auth.get_credentials
     language = @args[0]
     name = @args[1]
+
+    return error('You must specify a language') unless language
+    return error('You must specify a name for your block') unless name
 
     begin
 
